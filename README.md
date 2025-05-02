@@ -1,3 +1,3 @@
-# Liza Bot
+# Liza Bot with Keep Alive
 
-Telegram бот з голосом та любов’ю ❤️
+Telegram бот із підтримкою Flask-сервера для постійної роботи на Render.
