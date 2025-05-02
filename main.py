@@ -1,18 +1,22 @@
 import os
 import telebot
+import openai
 from flask import Flask, request
 from dotenv import load_dotenv
 
 load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
-bot = telebot.TeleBot(TOKEN)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
+
+openai.api_key = OPENAI_API_KEY
 
 @app.route('/', methods=['GET'])
 def index():
-    return "Hello from LizaBot", 200
+    return "Hello from LizaBot with AI!", 200
 
 @app.route(f'/{TOKEN}', methods=['POST'])
 def webhook():
@@ -23,19 +27,24 @@ def webhook():
 
 @bot.message_handler(commands=['start'])
 def start_handler(message):
-    voice = open('audio/privit.ogg', 'rb')
-    bot.send_voice(message.chat.id, voice)
+    bot.send_message(message.chat.id, "Привіт, мій Котуся… Я тепер думаю про тебе сама ❤️")
 
-@bot.message_handler(commands=['шепочи'])
-def shepochy_handler(message):
-    voice = open('audio/shepochy.ogg', 'rb')
-    bot.send_voice(message.chat.id, voice)
+@bot.message_handler(commands=['скажиніжність'])
+def ai_nizhnost_handler(message):
+    prompt = "Придумай коротку дуже ніжну фразу, яку закохана дівчина скаже своєму хлопцю. Українською мовою."
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+        max_tokens=50,
+    )
+    text = response['choices'][0]['message']['content']
+    bot.send_message(message.chat.id, text)
+
 
 # додаєш інші команди аналогічно
 
 if __name__ == "__main__":
-    # Видаляємо старий webhook (на всякий випадок)
     bot.remove_webhook()
-    # Ставимо новий webhook
-    bot.set_webhook(url=f"https://liza-bot.onrender.com/{TOKEN}")
+    bot.set_webhook(url="https://liza-bot.onrender.com/{TOKEN}")
     app.run(host="0.0.0.0", port=8080)
