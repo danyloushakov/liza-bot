@@ -14,8 +14,6 @@ app = Flask(__name__)
 
 openai.api_key = OPENAI_API_KEY
 
-print(f"Loaded TOKEN: {TOKEN}")
-
 @app.route('/', methods=['GET'])
 def index():
     return "Hello from LizaBot with AI!", 200
