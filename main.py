@@ -45,6 +45,6 @@ def ai_nizhnost_handler(message):
 # додаєш інші команди аналогічно
 
 if __name__ == "__main__":
-    bot.remove_webhook()
-    bot.set_webhook(url="https://liza-bot.onrender.com/{TOKEN}")
-    app.run(host="0.0.0.0", port=8080)
+bot.remove_webhook()
+bot.set_webhook(url=f"https://liza-bot.onrender.com/{TOKEN}")
+app.run(host="0.0.0.0", port=8080)
